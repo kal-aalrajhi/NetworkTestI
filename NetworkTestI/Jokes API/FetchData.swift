@@ -3,7 +3,7 @@
 //  NetworkTestI
 //
 //  Created by Dr Cpt Blackbeard on 7/19/23.
-//
+// Comments
 
 import Foundation
 
@@ -55,7 +55,14 @@ class JokesViewModel: ObservableObject {
             }
             
             print("Decoded JSON: \(newJoke)")
-            self.randomJokes.append(newJoke)
+            
+            /// 4) Ensure our data appears all at once in our UI
+            ///     Note: Concurrency - Ensure the code below is executed on main thread in a non-blocking way (by default URLSession task goes on the background thread, which we want to override here)
+            ///         This allows our array to store data and update it in the UI async. If we just ran self.randomJokes.append(newJoke) on its own, it would update random parts at random times.
+            ///         Similar to Promise.all([]), which queues up all the responses and stores them at once.
+            DispatchQueue.main.async { [weak self] in
+                self?.randomJokes.append(newJoke)
+            }
         }.resume() // resume starts the URLSession data task
     }
 }

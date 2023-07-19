@@ -11,7 +11,6 @@ import SwiftUI
 struct NetworkTestIApp: App {
     var body: some Scene {
         WindowGroup {
-//            ContentView()
 //            DownloadWithEscaping()
             JokeView()
         }
