@@ -7,12 +7,15 @@
 
 import Foundation
 
-class jokesViewModel: ObservableObject {
+class JokesViewModel: ObservableObject {
     
-    init() {}
+    @Published var randomJokes: [Joke] = []
+    
+    init() {
+        getRandomJokes()
+    }
     
     func getRandomJokes() {
-        
         /// 1) Get the URL
         guard let url = URL(string: "https://official-joke-api.appspot.com/jokes/random") else {
             print("Unable to retrive URL")
@@ -50,6 +53,9 @@ class jokesViewModel: ObservableObject {
                 print("Unable to decode data into Joke model, please check that properties in data model match API property values.")
                 return
             }
-        }
+            
+            print("Decoded JSON: \(newJoke)")
+            self.randomJokes.append(newJoke)
+        }.resume() // resume starts the URLSession data task
     }
 }

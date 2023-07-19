@@ -79,7 +79,7 @@ class DownloadWithEscapingViewModel: ObservableObject {
             // Now we have the data stored in our data Model, we can use it!
             self.posts.append(newPost)
             
-        }.resume() // resume will start this task
+        }.resume() // resume starts the URLSession data task
     }
     
 }
