@@ -11,7 +11,18 @@ struct JokeView: View {
     @StateObject var jokesVM = JokesViewModel()
     
     var body: some View {
-        Text("Hello JokeView!")
+        VStack {
+            Text("Hello JokeView!")
+                .font(.title)
+            ForEach(jokesVM.randomJokes) { joke in
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("Setup: \(joke.setup)")
+                        .font(.title2)
+                    Text("Punchline: \(joke.punchline)")
+                        .font(.title3)
+                }
+            }
+        }
     }
 }
 

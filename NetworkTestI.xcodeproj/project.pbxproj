@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		B70528592A68154B007C8A2C /* NetworkTestIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B70528582A68154B007C8A2C /* NetworkTestIApp.swift */; };
-		B705285B2A68154B007C8A2C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B705285A2A68154B007C8A2C /* ContentView.swift */; };
 		B705285D2A68154C007C8A2C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B705285C2A68154C007C8A2C /* Assets.xcassets */; };
 		B70528602A68154C007C8A2C /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B705285F2A68154C007C8A2C /* Preview Assets.xcassets */; };
 		B70528672A6819F5007C8A2C /* RandomJokeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B70528662A6819F5007C8A2C /* RandomJokeModel.swift */; };
@@ -20,7 +19,6 @@
 /* Begin PBXFileReference section */
 		B70528552A68154B007C8A2C /* NetworkTestI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NetworkTestI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B70528582A68154B007C8A2C /* NetworkTestIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkTestIApp.swift; sourceTree = "<group>"; };
-		B705285A2A68154B007C8A2C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		B705285C2A68154C007C8A2C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B705285F2A68154C007C8A2C /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		B70528662A6819F5007C8A2C /* RandomJokeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomJokeModel.swift; sourceTree = "<group>"; };
@@ -60,7 +58,6 @@
 			isa = PBXGroup;
 			children = (
 				B70528582A68154B007C8A2C /* NetworkTestIApp.swift */,
-				B705285A2A68154B007C8A2C /* ContentView.swift */,
 				B705286A2A681E62007C8A2C /* DownloadWithEscaping.swift */,
 				B705286E2A68378B007C8A2C /* Jokes API */,
 				B705285C2A68154C007C8A2C /* Assets.xcassets */,
@@ -159,7 +156,6 @@
 			files = (
 				B705286B2A681E62007C8A2C /* DownloadWithEscaping.swift in Sources */,
 				B705286D2A68336C007C8A2C /* JokeView.swift in Sources */,
-				B705285B2A68154B007C8A2C /* ContentView.swift in Sources */,
 				B70528672A6819F5007C8A2C /* RandomJokeModel.swift in Sources */,
 				B70528692A681ACC007C8A2C /* FetchData.swift in Sources */,
 				B70528592A68154B007C8A2C /* NetworkTestIApp.swift in Sources */,

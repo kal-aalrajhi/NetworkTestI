@@ -36,6 +36,8 @@ class DownloadWithEscapingViewModel: ObservableObject {
         /// data - will be data; response - will be 200, 400, etc...; error - will be nil or some message
         /// Before we do anything, we want to check to see if those parameters have values and do stuff with it
         URLSession.shared.dataTask(with: url) { (data, response, error) in
+            // Data tasks go on a background thread by default
+            
             /// >>>>> CHECKS FOR DOWNLOADED DATA <<<<<
             // Are we even able to retrieve the data?
             guard let data = data else {
@@ -77,8 +79,11 @@ class DownloadWithEscapingViewModel: ObservableObject {
             /// >>>>> END DATA DECODE <<<<<<
             
             // Now we have the data stored in our data Model, we can use it!
-            self.posts.append(newPost)
-            
+            // If we wanna display our data in a view, we gotta put our data task on the main thread instead of the the background thread.
+            // DispatchQueue is used to ensure that the code inside the block is executed on the main queue, and therefore, it's safe to update UI elements like your randomJokes array that's being observed for changes in your app's user interface
+            DispatchQueue.main.async { [weak self] in
+                self?.posts.append(newPost)
+            }
         }.resume() // resume starts the URLSession data task
     }
     
@@ -86,10 +91,20 @@ class DownloadWithEscapingViewModel: ObservableObject {
 
 // VIEW (V of MVVM)
 struct DownloadWithEscaping: View {
+    
     @StateObject var vm = DownloadWithEscapingViewModel()
     
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        List {
+            ForEach(vm.posts) { post in
+                VStack {
+                    Text(post.title)
+                        .font(.headline)
+                    Text(post.body)
+                        .foregroundColor(.secondary)
+                }
+            }
+        }
     }
 }
 
