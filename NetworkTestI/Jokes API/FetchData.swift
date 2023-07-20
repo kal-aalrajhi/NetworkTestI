@@ -17,7 +17,7 @@ class JokesViewModel: ObservableObject {
     
     func getRandomJokes() {
         /// 1) Get the URL
-        guard let url = URL(string: "https://official-joke-api.appspot.com/jokes/random") else {
+        guard let url = URL(string: "https://official-joke-api.appspot.com/jokes/ten") else {
             print("Unable to retrive URL")
             return
         }
@@ -30,15 +30,15 @@ class JokesViewModel: ObservableObject {
             if let data = returnedData {
                 
         /// 3) Decode JSON data into newJoke data model so it can be used in our app
-                guard let newJoke = try? JSONDecoder().decode(Joke.self, from: data) else {
+                guard let newJokes = try? JSONDecoder().decode([Joke].self, from: data) else {
                     print("Unable to decode data into Joke model, please check that properties in data model match API property values.")
                     return
                 }
-                print("Decoded JSON: \(newJoke)")
+                print("Decoded JSON: \(newJokes)")
         
         /// 4) Ensure our data appears all at once in our UI
                 DispatchQueue.main.async { [weak self] in
-                    self?.randomJokes.append(newJoke)
+                    self?.randomJokes = newJokes
                 }
             } else {
                 print("No data returned")
