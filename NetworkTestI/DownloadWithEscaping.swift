@@ -25,71 +25,54 @@ class DownloadWithEscapingViewModel: ObservableObject {
     }
     
     func getPosts() {
-        
+        // Assign URL
         guard let url = URL(string: "https://jsonplaceholder.typicode.com/posts/1") else {
             print("Unable to retrieve URL")
             return
         }
-        
+        // Attempt to download data from URL
+        downloadData(fromURL: url) { returnedData in
+            if let data = returnedData {
+                // Make our data PostModel specific
+                guard let newPost = try? JSONDecoder().decode(PostModel.self, from: data) else {
+                    print("Unable to decode data into PostModel, please check that properties in data model match API property values.")
+                    return
+                }
+                // Append data to array
+                DispatchQueue.main.async { [weak self] in
+                    self?.posts.append(newPost)
+                }
+            } else {
+                print("No data returned")
+            }
+        }
+    }
+
+    // Generic helper function for downloading anytype of data
+    // URLSessions returns data async, we gotta wait for a return. This is why we use @escaping
+    // Our completionHandler of type @escaping will return data of type Data
+    func downloadData(fromURL url: URL, completionHandler: @escaping (_ data: Data?) -> ()) {
+
         URLSession.shared.dataTask(with: url) { (data, response, error) in
-
-            guard let data = data else {
-                print("No data.")
-                return
-            }
-            
-            guard let response = response as? HTTPURLResponse else {
-                print("Unknown response type.")
-                return
-            }
-            
-            guard response.statusCode >= 200 && response.statusCode < 300 else {
-                print("Response code should be a success case (2xx), but it's \(response.statusCode)")
-                return
-            }
-            
-            guard error == nil else {
-                print("Error found: \(String(describing: error))")
-                return
-            }
-
-            guard let newPost = try? JSONDecoder().decode(PostModel.self, from: data) else {
-                print("Unable to decode data into PostModel, please check that properties in data model match API property values.")
-                return
-            }
-
-            DispatchQueue.main.async { [weak self] in
-                self?.posts.append(newPost)
-            }
+            guard
+                let data = data,
+                let response = response as? HTTPURLResponse,
+                response.statusCode >= 200 && response.statusCode < 300,
+                error == nil
+            // Failure case
+            else {
+                    print("Error downloading data.")
+                    completionHandler(nil)
+                    return
+                }
+            // Success
+            completionHandler(data)
         }.resume()
     }
     
 }
 
 // VIEW (V of MVVM)
-struct DownloadWithEscaping: View {
-    
-    @StateObject var vm = DownloadWithEscapingViewModel()
-    
-    var body: some View {
-        List {
-            ForEach(vm.posts) { post in
-                VStack {
-                    Text(post.title)
-                        .font(.headline)
-                    Text(post.body)
-                        .foregroundColor(.secondary)
-                }
-            }
-        }
-    }
-}
-
-struct DownloadWithEscaping_Previews: PreviewProvider {
-    static var previews: some View {
-        DownloadWithEscaping()
-    }
-}
 struct DownloadWithEscaping: View {
     
     @StateObject var vm = DownloadWithEscapingViewModel()
