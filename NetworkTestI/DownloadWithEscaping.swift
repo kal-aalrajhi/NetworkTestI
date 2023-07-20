@@ -31,25 +31,42 @@ class DownloadWithEscapingViewModel: ObservableObject {
             return
         }
         
-        URLSession.shared.dataTask(with: url) { (data, response, error) in
+        downloadData(fromURL: url) { returnedData in
+            if let data = returnedData {
+                guard let newPost = try? JSONDecoder().decode(PostModel.self, from: data) else {
+                    print("Unable to decode data into PostModel, please check that properties in data model match API property values.")
+                    return
+                }
+                // Add data to existing array
+                DispatchQueue.main.async { [weak self] in
+                    self?.posts.append(newPost)
+                }
+            } else {
+                print("No data returned")
+            }
+        }
+        
+    }
 
+    // Helper function for downloading anytype of data
+    // URLSessions returns data async, we gotta wait for a return. This is why we use @escaping
+    // Our completionHandler of type @escaping will return data of type Data
+    func downloadData(fromURL url: URL, completionHandler: @escaping (_ data: Data?) -> ()) {
+
+        URLSession.shared.dataTask(with: url) { (data, response, error) in
             guard
                 let data = data,
                 let response = response as? HTTPURLResponse,
                 response.statusCode >= 200 && response.statusCode < 300,
-                error == nil else {
+                error == nil
+            // Failure case
+            else {
                     print("Error downloading data.")
+                    completionHandler(nil)
                     return
                 }
-
-            guard let newPost = try? JSONDecoder().decode(PostModel.self, from: data) else {
-                print("Unable to decode data into PostModel, please check that properties in data model match API property values.")
-                return
-            }
-
-            DispatchQueue.main.async { [weak self] in
-                self?.posts.append(newPost)
-            }
+            // Success
+            completionHandler(data)
         }.resume()
     }
     
