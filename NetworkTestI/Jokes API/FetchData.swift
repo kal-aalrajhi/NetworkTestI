@@ -40,6 +40,8 @@ class JokesViewModel: ObservableObject {
                 DispatchQueue.main.async { [weak self] in
                     self?.randomJokes.append(newJoke)
                 }
+            } else {
+                print("No data returned")
             }
         }
     }
