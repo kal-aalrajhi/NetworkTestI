@@ -33,25 +33,14 @@ class DownloadWithEscapingViewModel: ObservableObject {
         
         URLSession.shared.dataTask(with: url) { (data, response, error) in
 
-            guard let data = data else {
-                print("No data.")
-                return
-            }
-            
-            guard let response = response as? HTTPURLResponse else {
-                print("Unknown response type.")
-                return
-            }
-            
-            guard response.statusCode >= 200 && response.statusCode < 300 else {
-                print("Response code should be a success case (2xx), but it's \(response.statusCode)")
-                return
-            }
-            
-            guard error == nil else {
-                print("Error found: \(String(describing: error))")
-                return
-            }
+            guard
+                let data = data,
+                let response = response as? HTTPURLResponse,
+                response.statusCode >= 200 && response.statusCode < 300,
+                error == nil else {
+                    print("Error downloading data.")
+                    return
+                }
 
             guard let newPost = try? JSONDecoder().decode(PostModel.self, from: data) else {
                 print("Unable to decode data into PostModel, please check that properties in data model match API property values.")
