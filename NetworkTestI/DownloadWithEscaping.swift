@@ -25,19 +25,20 @@ class DownloadWithEscapingViewModel: ObservableObject {
     }
     
     func getPosts() {
-        
+        // Assign URL
         guard let url = URL(string: "https://jsonplaceholder.typicode.com/posts/1") else {
             print("Unable to retrieve URL")
             return
         }
-        
+        // Attempt to download data from URL
         downloadData(fromURL: url) { returnedData in
             if let data = returnedData {
+                // Make our data PostModel specific
                 guard let newPost = try? JSONDecoder().decode(PostModel.self, from: data) else {
                     print("Unable to decode data into PostModel, please check that properties in data model match API property values.")
                     return
                 }
-                // Add data to existing array
+                // Append data to array
                 DispatchQueue.main.async { [weak self] in
                     self?.posts.append(newPost)
                 }
@@ -45,10 +46,9 @@ class DownloadWithEscapingViewModel: ObservableObject {
                 print("No data returned")
             }
         }
-        
     }
 
-    // Helper function for downloading anytype of data
+    // Generic helper function for downloading anytype of data
     // URLSessions returns data async, we gotta wait for a return. This is why we use @escaping
     // Our completionHandler of type @escaping will return data of type Data
     func downloadData(fromURL url: URL, completionHandler: @escaping (_ data: Data?) -> ()) {
@@ -73,29 +73,6 @@ class DownloadWithEscapingViewModel: ObservableObject {
 }
 
 // VIEW (V of MVVM)
-struct DownloadWithEscaping: View {
-    
-    @StateObject var vm = DownloadWithEscapingViewModel()
-    
-    var body: some View {
-        List {
-            ForEach(vm.posts) { post in
-                VStack {
-                    Text(post.title)
-                        .font(.headline)
-                    Text(post.body)
-                        .foregroundColor(.secondary)
-                }
-            }
-        }
-    }
-}
-
-struct DownloadWithEscaping_Previews: PreviewProvider {
-    static var previews: some View {
-        DownloadWithEscaping()
-    }
-}
 struct DownloadWithEscaping: View {
     
     @StateObject var vm = DownloadWithEscapingViewModel()
